@@ -25,6 +25,8 @@ is_defined "${BUILD_ID}" "No BUILD_ID provided." 4
 is_defined "${CONTAINER_SERVER_HOSTNAME}" "No hostname provided for the container server"
 is_defined "${CONTAINER_SERVER_IP}" 'No IP address provided for the container server'
 
+# When running a job in parallel the workspace folder is not the same as JOB_NAME
+readonly JOB_DIR=$(basename "${WORKSPACE}")
 readonly CONTAINER_TO_RUN_NAME=${CONTAINER_TO_RUN_NAME:-$(container_name "${JOB_NAME}" "${BUILD_ID}")}
 readonly CONTAINER_COMMAND=${CONTAINER_COMMAND:-"${WORKSPACE}/hera/wait.sh"}
 
@@ -34,6 +36,6 @@ run_ssh "podman run \
              --add-host=${CONTAINER_SERVER_HOSTNAME}:${CONTAINER_SERVER_IP}  \
             --rm $(add_parent_volume_if_provided) \
             --workdir ${WORKSPACE} \
-            -v "${JENKINS_HOME_DIR}/workspace/${JOB_NAME}":$(dirname "${WORKSPACE}")/${JOB_NAME}:rw \
+            -v "${JENKINS_HOME_DIR}/workspace/${JOB_DIR}":${WORKSPACE}:rw \
             -v /opt/:/opt/:ro \
 	        -d ${BUILD_PODMAN_IMAGE} '${CONTAINER_COMMAND}'"
