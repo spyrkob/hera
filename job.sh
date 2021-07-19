@@ -28,6 +28,7 @@ dumpBuildEnv "${HERA_HOME}/build-env.sh"
 
 set +u
 run_ssh "podman exec \
+        -e LANG='en_US.utf8' \
         -e JOB_NAME="${JOB_NAME}" \
         -e WORKSPACE="${WORKSPACE}" \
         -e WORKDIR="${WORKDIR}" \
