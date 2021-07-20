@@ -32,6 +32,11 @@ readonly JOB_DIR=$(basename "${WORKSPACE}")
 readonly CONTAINER_TO_RUN_NAME=${CONTAINER_TO_RUN_NAME:-$(container_name "${JOB_NAME}" "${BUILD_ID}")}
 readonly CONTAINER_COMMAND=${CONTAINER_COMMAND:-"${WORKSPACE}/hera/wait.sh"}
 
+
+locale
+
+cat 
+
 # shellcheck disable=SC2016
 run_ssh "podman run \
             --userns=keep-id -u ${JENKINS_UID}:${JENKINS_GUID} \

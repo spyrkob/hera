@@ -45,4 +45,7 @@ run_ssh "podman exec \
         -e PULL_REQUEST_PROCESSOR_HOME="${PULL_REQUEST_PROCESSOR_HOME}" \
         -e VERSION="${VERSION}" \
         -e COMPONENT_UPGRADE_LOGGER="${COMPONENT_UPGRADE_LOGGER}" \
+        -e NEXUS_URL=${NEXUS_URL} \
+        -e NEXUS_REPO=${NEXUS_REPO} \
+        -e NEXUS_CREDENTIALS=${NEXUS_CREDENTIALS} \
         -ti ${CONTAINER_NAME} '${BUILD_SCRIPT}' ${@}"
