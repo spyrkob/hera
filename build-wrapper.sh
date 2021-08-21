@@ -18,6 +18,7 @@ export HOSTNAME
 export USER='jenkins'
 readonly HERA_HOME=${HERA_HOME:-"${WORKSPACE}/hera/"}
 readonly FAIL_TO_SET_DEFAULT_TO_WORKSPACE_CODE='13'
+readonly COPY_ARTIFACTS=${COPY_ARTIFACTS:-$(if [[ "${BUILD_COMMAND}" = "testsuite" ]]; then echo "true"; fi)}
 
 echo "WORKSPACE: ${WORKSPACE}"
 echo "HERA_HOME: ${HERA_HOME}"
@@ -44,7 +45,7 @@ if [ -n "${HARMONIA_SCRIPT}" ]; then
   is_defined "${HARMONIA_HOME}" 'HARMONIA_HOME is undefined'
   is_dir "${HARMONIA_HOME}" "Provided HARMONIA_HOME is invalid: ${HARMONIA_HOME}"
 
-  if [ "${BUILD_COMMAND}" = 'testsuite' ]; then
+  if [ "${COPY_ARTIFACTS}" = 'true' ]; then
     is_dir "${PARENT_JOB_DIR}"
     copy_artefact_from_parent_job "${PARENT_JOB_DIR}/workdir" "${WORKSPACE}"
   fi

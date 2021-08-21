@@ -40,6 +40,7 @@ run_ssh "podman exec \
         -e MAVEN_GOALS='"${MAVEN_GOALS}"' \
         -e BUILD_ID="${BUILD_ID}" \
         -e BUILD_COMMAND="${BUILD_COMMAND}" \
+        -e COPY_ARTIFACTS="${COPY_ARTIFACTS}" \
         -e RERUN_FAILING_TESTS="${RERUN_FAILING_TESTS}" \
         -e MAVEN_SETTINGS_XML="${MAVEN_SETTINGS_XML}" \
         -e PULL_REQUEST_PROCESSOR_HOME="${PULL_REQUEST_PROCESSOR_HOME}" \
