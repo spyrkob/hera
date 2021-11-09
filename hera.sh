@@ -2,7 +2,7 @@
 set +u
 readonly HERA_HOME=${HERA_HOME:-'./hera'}
 export HERA_HOME
-readonly HERA_DEBUG=${HERA_DEBUG}
+readonly HERA_DEBUG="true"
 export HERA_DEBUG
 readonly HERA_CMD=${1}
 shift
@@ -10,7 +10,6 @@ shift
 readonly HERA_SCRIPT=${HERA_HOME}/${HERA_CMD}.sh
 set -u
 
-echo "hera"
 # shellcheck source=library.sh
 source "${HERA_HOME}"/library.sh
 
