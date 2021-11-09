@@ -10,6 +10,7 @@ shift
 readonly HERA_SCRIPT=${HERA_HOME}/${HERA_CMD}.sh
 set -u
 
+echo "hera"
 # shellcheck source=library.sh
 source "${HERA_HOME}"/library.sh
 
