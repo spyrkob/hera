@@ -50,4 +50,5 @@ run_ssh "podman exec \
         -e NEXUS_URL=${NEXUS_URL} \
         -e NEXUS_REPO=${NEXUS_REPO} \
         -e NEXUS_CREDENTIALS=${NEXUS_CREDENTIALS} \
+        -e GIT_REPOSITORY_URL="${GIT_REPOSITORY_URL}" \
         -ti ${CONTAINER_NAME} '${BUILD_SCRIPT}' ${@}"
