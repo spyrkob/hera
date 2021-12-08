@@ -28,7 +28,7 @@ is_defined "${CONTAINER_SERVER_HOSTNAME}" "No hostname provided for the containe
 is_defined "${CONTAINER_SERVER_IP}" 'No IP address provided for the container server'
 
 # When running a job in parallel the workspace folder is not the same as JOB_NAME
-readonly JOB_DIR=$(basename "${WORKSPACE}")
+readonly JOB_DIR=$(echo "${WORKSPACE}" | sed -e "s;/var/jenkins_home/;${JENKINS_HOME_DIR};")
 readonly CONTAINER_TO_RUN_NAME=${CONTAINER_TO_RUN_NAME:-$(container_name "${JOB_NAME}" "${BUILD_ID}")}
 readonly CONTAINER_COMMAND=${CONTAINER_COMMAND:-"${WORKSPACE}/hera/wait.sh"}
 
@@ -39,7 +39,7 @@ run_ssh "podman run \
              --add-host=${CONTAINER_SERVER_HOSTNAME}:${CONTAINER_SERVER_IP}  \
             --rm $(add_parent_volume_if_provided) \
             --workdir ${WORKSPACE} \
-            -v "${JENKINS_HOME_DIR}/workspace/${JOB_DIR}":${WORKSPACE}:rw \
+            -v "${JOB_DIR}":${WORKSPACE}:rw \
             -v /opt/:/opt/:ro \
             -v "${JENKINS_HOME_DIR}/.ssh/":/var/jenkins_home/.ssh/:ro \
             -v "${JENKINS_HOME_DIR}/.gitconfig":/var/jenkins_home/.gitconfig:ro \
