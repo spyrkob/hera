@@ -12,8 +12,13 @@ readonly CONTAINER_SERVER_IP=${CONTAINER_SERVER_IP:-'10.88.0.1'}
 set -u
 
 add_parent_volume_if_provided() {
-  if [ -n "${PARENT_JOB_VOLUME}" ]; then
-    echo "-v '${PARENT_JOB_VOLUME}:/parent_job/:ro'"
+  if [ -n "${PARENT_JOB_NAME}" ]; then
+    if [ -n "${PARENT_JOB_BUILD_ID}" ]; then
+      echo "-v '${JENKINS_HOME_DIR}/jobs/${PARENT_JOB_NAME}/builds/${PARENT_JOB_BUILD_ID}/archive:/parent_job/:ro'"
+    else
+      echo "Something is wrong PARENT_JOB_NAME: ${PARENT_JOB_NAME} was provided, but not PARENT_JOB_BUILD_ID, abort."
+      exit 1
+    fi
   fi
 }
 
