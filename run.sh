@@ -1,6 +1,7 @@
 #!/bin/bash
 set +u
-readonly PARENT_JOB_VOLUME=${PARENT_JOB_VOLUME}
+readonly PARENT_JOB_NAME=${PARENT_JOB_NAME}
+readonly PARENT_JOB_BUILD_ID=${PARENT_JOB_BUILD_ID}
 readonly BUILD_PODMAN_IMAGE=${BUILD_PODMAN_IMAGE:-'localhost/automatons'}
 readonly JENKINS_HOME_DIR=${JENKINS_HOME_DIR:-'/home/jenkins/'}
 readonly JENKINS_UID=${JENKINS_UID:-'1000'}
