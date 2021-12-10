@@ -4,6 +4,7 @@ readonly PARENT_JOB_NAME=${PARENT_JOB_NAME}
 readonly PARENT_JOB_BUILD_ID=${PARENT_JOB_BUILD_ID}
 readonly BUILD_PODMAN_IMAGE=${BUILD_PODMAN_IMAGE:-'localhost/automatons'}
 readonly JENKINS_HOME_DIR=${JENKINS_HOME_DIR:-'/home/jenkins/'}
+readonly JENKINS_ACCOUNT_DIR=${JENKINS_ACCOUNT_DIR:-'/home/jenkins'}
 readonly JENKINS_UID=${JENKINS_UID:-'1000'}
 readonly JENKINS_GUID=${JENKINS_GUID:-"${JENKINS_UID}"}
 readonly JOB_NAME=${JOB_NAME}
@@ -47,7 +48,7 @@ run_ssh "podman run \
             --workdir ${WORKSPACE} \
             -v "${JOB_DIR}":${WORKSPACE}:rw \
             -v /opt/:/opt/:ro \
-            -v "${JENKINS_HOME_DIR}/.ssh/":/var/jenkins_home/.ssh/:ro \
-            -v "${JENKINS_HOME_DIR}/.gitconfig":/var/jenkins_home/.gitconfig:ro \
-            -v "${JENKINS_HOME_DIR}/.netrc":/var/jenkins_home/.netrc:ro \
+            -v "${JENKINS_ACCOUNT_DIR}/.ssh/":/var/jenkins_home/.ssh/:ro \
+            -v "${JENKINS_ACCOUNT_DIR}/.gitconfig":/var/jenkins_home/.gitconfig:ro \
+            -v "${JENKINS_ACCOUNT_DIR}/.netrc":/var/jenkins_home/.netrc:ro \
 	        -d ${BUILD_PODMAN_IMAGE} '${CONTAINER_COMMAND}'"
