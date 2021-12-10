@@ -30,6 +30,8 @@ set +u
 run_ssh "podman exec \
         -e LANG='en_US.utf8' \
         -e JOB_NAME="${JOB_NAME}" \
+        -e PARENT_JOB_NAME="${PARENT_JOB_NAME}" \
+        -e PARENT_JOB_BUILD_ID="${PARENT_JOB_BUILD_ID}" \
         -e WORKSPACE="${WORKSPACE}" \
         -e WORKDIR="${WORKDIR}" \
         -e JAVA_HOME="${JAVA_HOME}" \
