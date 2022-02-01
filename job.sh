@@ -54,4 +54,7 @@ run_ssh "podman exec \
         -e NEXUS_CREDENTIALS=${NEXUS_CREDENTIALS} \
         -e GIT_REPOSITORY_URL="${GIT_REPOSITORY_URL}" \
         -e GIT_REPOSITORY_BRANCH="${GIT_REPOSITORY_BRANCH}" \
-        -ti ${CONTAINER_NAME} '${BUILD_SCRIPT}' ${@}"
+        -e TOOLS_DIR="${TOOLS_DIR}" \
+        -e TOOLS_MOUNT="${TOOLS_MOUNT}" \
+        -e BUILD_MOLECULE_SLAVE_SSHD_PORT="${BUILD_MOLECULE_SLAVE_SSHD_PORT}" \
+        -ti ${CONTAINER_NAME} '${BUILD_SCRIPT}' ${@}" | removeColorsControlCharactersFromOutput
