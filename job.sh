@@ -57,4 +57,5 @@ run_ssh "podman exec \
         -e TOOLS_DIR="${TOOLS_DIR}" \
         -e TOOLS_MOUNT="${TOOLS_MOUNT}" \
         -e BUILD_MOLECULE_SLAVE_SSHD_PORT="${BUILD_MOLECULE_SLAVE_SSHD_PORT}" \
+        -e PROJECT_DOWNSTREAM_NAME="${PROJECT_DOWNSTREAM_NAME}" \
         -ti ${CONTAINER_NAME} '${BUILD_SCRIPT}' ${@}" | removeColorsControlCharactersFromOutput
