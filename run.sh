@@ -16,7 +16,9 @@ readonly CONTAINER_SERVER_IP=${CONTAINER_SERVER_IP:-'10.88.0.1'}
 readonly TOOLS_DIR=${TOOLS_DIR:-'/opt'}
 readonly TOOLS_MOUNT=${TOOLS_MOUNT:-'/opt'}
 readonly PUBLISHED_PORTS=${PUBLISHED_PORTS:-''}
+readonly PRIVILEGED_ENABLED=${PRIVILEGED_ENABLED:-''}
 readonly SYSTEMD_ENABLED=${SYSTEMD_ENABLED:-''}
+readonly CGROUP_MOUNT_ENABLED=${CGROUP_MOUNT_ENABLED:-''}
 
 set -euo pipefail
 
@@ -37,9 +39,21 @@ add_ports_if_provided() {
  fi
 }
 
+privileged_if_enabled() {
+  if [ -n "${PRIVILEGED_ENABLED}" ]; then
+    echo "--privileged=true"
+  fi
+}
+
 systemd_if_enabled() {
   if [ -n "${SYSTEMD_ENABLED}" ]; then
-    echo "--systemd=true --privileged=true -v /sys/fs/cgroup:/sys/fs/cgroup:ro"
+    echo "--systemd=true"
+  fi
+}
+
+cgroup_mount_if_enabled() {
+  if [ -n "${CGROUP_MOUNT_ENABLED}" ]; then
+    echo "-v /sys/fs/cgroup:/sys/fs/cgroup:ro"
   fi
 }
 
@@ -83,7 +97,7 @@ readonly CONTAINER_COMMAND=${CONTAINER_COMMAND:-"${WORKSPACE}/hera/wait.sh"}
 run_ssh "podman run \
             --name "${CONTAINER_TO_RUN_NAME}" $(container_user_if_enabled) \
             --add-host=${CONTAINER_SERVER_HOSTNAME}:${CONTAINER_SERVER_IP}  \
-            --rm $(add_parent_volume_if_provided) $(systemd_if_enabled) \
+            --rm $(add_parent_volume_if_provided) $(privileged_if_enabled) $(systemd_if_enabled) $(cgroup_mount_if_enabled) \
             --workdir ${WORKSPACE} $(add_ports_if_provided) \
             -v "${JOB_DIR}":${WORKSPACE}:rw $(mount_tools_if_provided)\
             -v "${JENKINS_ACCOUNT_DIR}/.ssh/":/var/jenkins_home/.ssh/:ro \
