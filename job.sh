@@ -1,5 +1,6 @@
 #!/bin/bash
 readonly BUILD_SCRIPT=${BUILD_SCRIPT:-'1'}
+readonly ENV_FILE=$1
 shift
 
 # shellcheck source=library.sh
@@ -26,8 +27,20 @@ readonly CONTAINER_NAME=$(container_name "${JOB_NAME}" "${BUILD_ID}")
 
 dumpBuildEnv "${HERA_HOME}/build-env.sh"
 
+# format in the env file is line delimited xx=yy
+env_file_if_enabled() {
+  if [ -n "${ENV_FILE}" ]; then
+    env_lines=""
+    while IFS= read -r line
+    do
+      env_lines+=" -e $line"
+    done < <(grep -v '^ *#' < "${ENV_FILE}")
+    echo "${env_lines}"
+  fi
+}
+
 set +u
-run_ssh "podman exec \
+run_ssh "podman exec $(env_file_if_enabled) \
         -e LANG='en_US.utf8' \
         -e JOB_NAME="${JOB_NAME}" \
         -e PARENT_JOB_NAME="${PARENT_JOB_NAME}" \
@@ -61,6 +74,5 @@ run_ssh "podman exec \
         -e TOOLS_MOUNT="${TOOLS_MOUNT}" \
         -e BUILD_MOLECULE_SLAVE_SSHD_PORT="${BUILD_MOLECULE_SLAVE_SSHD_PORT}" \
         -e PROJECT_DOWNSTREAM_NAME="${PROJECT_DOWNSTREAM_NAME}" \
-        -e TESTSUITE_OPTS="${TESTSUITE_OPTS}" \
         -ti ${CONTAINER_NAME} '${BUILD_SCRIPT}' ${@}" | removeColorsControlCharactersFromOutput
 exit "${PIPESTATUS[0]}"
