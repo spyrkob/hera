@@ -19,6 +19,8 @@ readonly PUBLISHED_PORTS=${PUBLISHED_PORTS:-''}
 readonly PRIVILEGED_ENABLED=${PRIVILEGED_ENABLED:-''}
 readonly SYSTEMD_ENABLED=${SYSTEMD_ENABLED:-''}
 readonly CGROUP_MOUNT_ENABLED=${CGROUP_MOUNT_ENABLED:-''}
+readonly JENKINS_JOBS_VOLUME_ENABLED=${JENKINS_JOBS_VOLUME_ENABLED}
+readonly JENKINS_JOBS_VOLUME=${JENKINS_JOBS_VOLUME:-'/jenkins_jobs'}
 
 set -euo pipefail
 
@@ -30,6 +32,12 @@ add_parent_volume_if_provided() {
       echo "Something is wrong PARENT_JOB_NAME: ${PARENT_JOB_NAME} was provided, but not PARENT_JOB_BUILD_ID, abort."
       exit 1
     fi
+  fi
+}
+
+add_jenkins_jobs_volume_if_requested() {
+  if [ -n "${JENKINS_JOBS_VOLUME_ENABLED}" ]; then
+    echo "-v '${JENKINS_HOME_DIR}/jobs/:${JENKINS_JOBS_VOLUME}:ro'"
   fi
 }
 
@@ -97,7 +105,7 @@ readonly CONTAINER_COMMAND=${CONTAINER_COMMAND:-"${WORKSPACE}/hera/wait.sh"}
 run_ssh "podman run \
             --name "${CONTAINER_TO_RUN_NAME}" $(container_user_if_enabled) \
             --add-host=${CONTAINER_SERVER_HOSTNAME}:${CONTAINER_SERVER_IP}  \
-            --rm $(add_parent_volume_if_provided) $(privileged_if_enabled) $(systemd_if_enabled) $(cgroup_mount_if_enabled) \
+            --rm $(add_parent_volume_if_provided) $(privileged_if_enabled) $(systemd_if_enabled) $(cgroup_mount_if_enabled) $(add_jenkins_jobs_volume_if_requested) \
             --workdir ${WORKSPACE} $(add_ports_if_provided) \
             -v "${JOB_DIR}":${WORKSPACE}:rw $(mount_tools_if_provided)\
             -v "${JENKINS_ACCOUNT_DIR}/.ssh/":/var/jenkins_home/.ssh/:ro \
