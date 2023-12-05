@@ -41,7 +41,6 @@ env_file_if_enabled() {
 
 set +u
 run_ssh "podman exec $(env_file_if_enabled) \
-        -e LANG='en_US.utf8' \
         -e JOB_NAME="${JOB_NAME}" \
         -e PARENT_JOB_NAME="${PARENT_JOB_NAME}" \
         -e PARENT_JOB_BUILD_ID="${PARENT_JOB_BUILD_ID}" \
